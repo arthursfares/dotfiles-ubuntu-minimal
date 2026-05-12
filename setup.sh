@@ -164,17 +164,6 @@ if ! command -v bluetui >/dev/null; then
     cargo install bluetui
 fi
 
-# ---------- 11. GitHub CLI --------------------------------------------------
-log "Installing GitHub CLI"
-if ! command -v gh >/dev/null; then
-    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
-        | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
-        | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-    sudo apt update
-    sudo apt install -y gh
-fi
-
 # ---------- done ------------------------------------------------------------
 cat <<EOF
 
@@ -184,9 +173,8 @@ cat <<EOF
   1. REBOOT (or at least log out & back in) so:
        * \`audio\` group membership takes effect
        * PipeWire user services start under the new session
-  2. \`gh auth login\`            -> authenticate GitHub CLI
-  3. \`bluetui\`                  -> pair Bluetooth devices
-  4. Optional: \`kitten themes\`  -> pick a different kitty theme
+  2. \`bluetui\`                  -> pair Bluetooth devices
+  3. Optional: \`kitten themes\`  -> pick a different kitty theme
 
   Your i3 config lives at:
     $DOTFILES_DIR/i3/config
