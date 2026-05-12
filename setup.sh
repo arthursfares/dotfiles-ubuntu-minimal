@@ -5,7 +5,6 @@
 #  Run as your normal user (NOT root). sudo will be invoked when needed.
 #    chmod +x setup.sh && ./setup.sh
 # ============================================================================
-
 set -euo pipefail
 
 # ---------- helpers ---------------------------------------------------------
@@ -18,9 +17,24 @@ append_once() {
     grep -qxF -- "$line" "$file" || printf '%s\n' "$line" >> "$file"
 }
 
+# Install $1 (source) to $2 (destination) as a real file copy.
+# - If $2 is a symlink, remove it silently.
+# - If $2 is a real file, back it up with a timestamp.
+install_config() {
+    local src="$1" dst="$2"
+    if [[ -L "$dst" ]]; then
+        rm -f "$dst"
+    elif [[ -e "$dst" ]]; then
+        mv "$dst" "$dst.bak.$(date +%s)"
+        warn "Existing $(basename "$dst") backed up next to it"
+    fi
+    cp "$src" "$dst"
+}
+
 # ---------- config ----------------------------------------------------------
 DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/arthursfares/dotfiles-ubuntu-minimal.git}"
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles-ubuntu-minimal}"
+I3BLOCKS_CONTRIB_REPO="${I3BLOCKS_CONTRIB_REPO:-https://github.com/vivien/i3blocks-contrib.git}"
 KITTY_THEME="${KITTY_THEME:-ENCOM}"
 
 # ---------- pre-flight ------------------------------------------------------
@@ -65,23 +79,30 @@ else
 fi
 
 mkdir -p "$HOME/.config/i3"
-I3_CONFIG="$HOME/.config/i3/config"
+install_config "$DOTFILES_DIR/i3/config" "$HOME/.config/i3/config"
 
-# If a real file (not a symlink) is already there, back it up.
-if [[ -e "$I3_CONFIG" && ! -L "$I3_CONFIG" ]]; then
-    mv "$I3_CONFIG" "$I3_CONFIG.bak.$(date +%s)"
-    warn "Existing i3 config backed up next to it"
+# ---------- 4. i3blocks config + contrib scripts ----------------------------
+log "Setting up i3blocks config and cloning i3blocks-contrib"
+I3BLOCKS_DIR="$HOME/.config/i3blocks"
+mkdir -p "$I3BLOCKS_DIR"
+
+install_config "$DOTFILES_DIR/i3blocks/config" "$I3BLOCKS_DIR/config"
+
+# Clone i3blocks-contrib for the helper scripts
+CONTRIB_DIR="$I3BLOCKS_DIR/i3blocks-contrib"
+if [[ -d "$CONTRIB_DIR/.git" ]]; then
+    git -C "$CONTRIB_DIR" pull --ff-only
+else
+    git clone "$I3BLOCKS_CONTRIB_REPO" "$CONTRIB_DIR"
 fi
 
-ln -sfn "$DOTFILES_DIR/i3/config" "$I3_CONFIG"
-
-# ---------- 4. kitty as default x-terminal-emulator -------------------------
+# ---------- 5. kitty as default x-terminal-emulator -------------------------
 log "Registering kitty as the default x-terminal-emulator"
 KITTY_BIN="$(command -v kitty)"
 sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator "$KITTY_BIN" 50
 sudo update-alternatives --set x-terminal-emulator "$KITTY_BIN"
 
-# ---------- 5. Google Chrome ------------------------------------------------
+# ---------- 6. Google Chrome ------------------------------------------------
 log "Installing Google Chrome"
 if ! command -v google-chrome >/dev/null; then
     CHROME_TMP="$(mktemp -d)"
@@ -91,7 +112,7 @@ if ! command -v google-chrome >/dev/null; then
     rm -rf "$CHROME_TMP"
 fi
 
-# ---------- 6. JetBrainsMono Nerd Font --------------------------------------
+# ---------- 7. JetBrainsMono Nerd Font --------------------------------------
 log "Installing JetBrainsMono Nerd Font"
 FONT_DIR="$HOME/.local/share/fonts"
 mkdir -p "$FONT_DIR"
@@ -102,7 +123,7 @@ if ! fc-list | grep -qi 'JetBrainsMono Nerd'; then
     fc-cache -fv
 fi
 
-# ---------- 7. kitty config + theme -----------------------------------------
+# ---------- 8. kitty config + theme -----------------------------------------
 log "Writing kitty.conf and fetching '$KITTY_THEME' theme"
 mkdir -p "$HOME/.config/kitty"
 
@@ -124,11 +145,11 @@ window_padding_width 4
 include current-theme.conf
 EOF
 
-# ---------- 8. timezone -----------------------------------------------------
+# ---------- 9. timezone -----------------------------------------------------
 log "Setting timezone to America/Sao_Paulo"
 sudo timedatectl set-timezone America/Sao_Paulo
 
-# ---------- 9. audio (PipeWire) + bluetooth ---------------------------------
+# ---------- 10. audio (PipeWire) + bluetooth --------------------------------
 log "Installing PipeWire audio stack and Bluetooth"
 sudo apt install -y \
     pipewire pipewire-pulse pipewire-alsa pipewire-jack \
@@ -154,7 +175,7 @@ monitor.bluez.properties = {
 EOF
 systemctl --user restart wireplumber 2>/dev/null || true
 
-# ---------- 10. bluetui (cargo) ---------------------------------------------
+# ---------- 11. bluetui (cargo) ---------------------------------------------
 log "Installing bluetui via cargo (may take a few minutes)"
 sudo apt install -y cargo libdbus-1-dev pkg-config
 append_once 'export PATH="$HOME/.cargo/bin:$PATH"' "$HOME/.bashrc"
@@ -176,9 +197,17 @@ cat <<EOF
   2. \`bluetui\`                  -> pair Bluetooth devices
   3. Optional: \`kitten themes\`  -> pick a different kitty theme
 
-  Your i3 config lives at:
-    $DOTFILES_DIR/i3/config
-  and is symlinked into ~/.config/i3/config. Edit it in the
-  repo, \`git pull\` on new machines, then reload with Mod+Shift+R.
+  Your dotfiles repo lives at:
+    $DOTFILES_DIR
+  Config files were copied to:
+    ~/.config/i3/config
+    ~/.config/i3blocks/config
+  i3blocks-contrib scripts:
+    ~/.config/i3blocks/i3blocks-contrib/
+
+  Note: edits in ~/.config/... are now local. To update the
+  repo, edit there and \`git push\`. To pull repo changes into
+  this machine, re-run this script (existing local configs
+  will be backed up with a timestamp).
 ============================================================
 EOF
