@@ -35,7 +35,6 @@ install_config() {
 DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/arthursfares/dotfiles-ubuntu-minimal.git}"
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles-ubuntu-minimal}"
 I3BLOCKS_CONTRIB_REPO="${I3BLOCKS_CONTRIB_REPO:-https://github.com/vivien/i3blocks-contrib.git}"
-KITTY_THEME="${KITTY_THEME:-ENCOM}"
 
 # ---------- pre-flight ------------------------------------------------------
 if [[ $EUID -eq 0 ]]; then
@@ -123,16 +122,9 @@ if ! fc-list | grep -qi 'JetBrainsMono Nerd'; then
     fc-cache -fv
 fi
 
-# ---------- 8. kitty config + theme -----------------------------------------
-log "Writing kitty.conf and fetching '$KITTY_THEME' theme"
+# ---------- 8. kitty config (font + padding only) ---------------------------
+log "Writing kitty.conf (theme left for user)"
 mkdir -p "$HOME/.config/kitty"
-
-if ! wget -q -O "$HOME/.config/kitty/current-theme.conf" \
-        "https://raw.githubusercontent.com/kovidgoyal/kitty-themes/master/themes/${KITTY_THEME}.conf"; then
-    warn "Couldn't fetch kitty theme '$KITTY_THEME'; run \`kitten themes\` later."
-    : > "$HOME/.config/kitty/current-theme.conf"
-fi
-
 cat > "$HOME/.config/kitty/kitty.conf" <<'EOF'
 # Font
 font_family JetBrainsMono Nerd Font
@@ -141,8 +133,11 @@ font_size   12.0
 # Padding
 window_padding_width 4
 
-# Theme (swap by overwriting current-theme.conf or via `kitten themes`)
-include current-theme.conf
+# Theme: pick one with `kitten themes`. That command writes
+# ~/.config/kitty/current-theme.conf and adds the include line
+# below automatically — uncomment after choosing a theme:
+#
+# include current-theme.conf
 EOF
 
 # ---------- 9. timezone -----------------------------------------------------
@@ -194,8 +189,11 @@ cat <<EOF
   1. REBOOT (or at least log out & back in) so:
        * \`audio\` group membership takes effect
        * PipeWire user services start under the new session
-  2. \`bluetui\`                  -> pair Bluetooth devices
-  3. Optional: \`kitten themes\`  -> pick a different kitty theme
+  2. \`bluetui\`         -> pair Bluetooth devices
+  3. \`kitten themes\`   -> pick a kitty theme (try ENCOM or
+                           Black Metal); the kitten will write
+                           ~/.config/kitty/current-theme.conf
+                           and uncomment the include line for you.
 
   Your dotfiles repo lives at:
     $DOTFILES_DIR
@@ -204,10 +202,5 @@ cat <<EOF
     ~/.config/i3blocks/config
   i3blocks-contrib scripts:
     ~/.config/i3blocks/i3blocks-contrib/
-
-  Note: edits in ~/.config/... are now local. To update the
-  repo, edit there and \`git push\`. To pull repo changes into
-  this machine, re-run this script (existing local configs
-  will be backed up with a timestamp).
 ============================================================
 EOF
