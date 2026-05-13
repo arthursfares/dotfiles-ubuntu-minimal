@@ -12,14 +12,20 @@ separator_block_width=15
 
 
 [volume]
-command=~/.config/i3blocks/i3blocks-contrib/volume/volume
+command=~/.config/i3blocks/i3blocks-contrib/volume-pipewire/volume-pipewire
 #LABEL=♪ 
 LABEL=VOL 
-interval=once
-signal=10
+interval=persist
+#signal=10
 #STEP=5%
 #MIXER=[determined automatically]
 #SCONTROL=[determined automatically]
+SUBSCRIBE=1
+AUDIO_HIGH_SYMBOL=VOL
+AUDIO_MED_SYMBOL=VOL
+AUDIO_LOW_SYMBOL=VOL
+AUDIO_MUTED_SYMBOL=MUTED
+LONG_FORMAT="${SYMB} ${VOL}%"
 
 
 [time]
