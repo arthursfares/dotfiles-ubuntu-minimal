@@ -191,6 +191,14 @@ if ! command -v gh >/dev/null; then
     sudo apt install -y gh
 fi
 
+# ---------- 13. Fix Chrome emojis -------------------------------------------
+log "Fixing Chrome emojis"
+sudo apt install -y fonts-noto-color-emoji
+mkdir -p "$HOME/.config/fontconfig/conf.d"
+install_config "$DOTFILES_DIR/fontconfig/conf.d/01-emoji.conf" \
+               "$HOME/.config/fontconfig/conf.d/01-emoji.conf"
+fc-cache -fv
+
 # ---------- done ------------------------------------------------------------
 cat <<EOF
 
