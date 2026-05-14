@@ -85,7 +85,15 @@ log "Setting up i3blocks config and cloning i3blocks-contrib"
 I3BLOCKS_DIR="$HOME/.config/i3blocks"
 mkdir -p "$I3BLOCKS_DIR"
 
-install_config "$DOTFILES_DIR/i3blocks/config" "$I3BLOCKS_DIR/config"
+install_config "$DOTFILES_DIR/i3blocks/config""$I3BLOCKS_DIR/config"
+
+# copy script files into config folder and make then executable
+for script in "$DOTFILES_DIR"/i3blocks/*.sh; do
+    [ -e "$script" ] || continue
+    dest="$I3BLOCKS_DIR/$(basename "$script")"
+    install_config "$script" "$dest"
+    chmod +x "$dest"
+done
 
 # Clone i3blocks-contrib for the helper scripts
 CONTRIB_DIR="$I3BLOCKS_DIR/i3blocks-contrib"
