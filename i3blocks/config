@@ -10,6 +10,9 @@
 separator=true
 separator_block_width=15
 
+[nordvpn]
+command=$HOME/.config/i3blocks/nordvpn.sh
+interval=10
 
 [bluetooth]
 command=$HOME/.config/i3blocks/bluetooth.sh
