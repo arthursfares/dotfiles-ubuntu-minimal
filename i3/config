@@ -216,4 +216,4 @@ client.focused          #ffffff #285577 #ffffff #ffffff   #ffffff
 gaps inner 10px
 
 # wallpaper
-#exec --no-startup-id feh --bg-fill $HOME/Pictures/wallpaper/wallpaper.jpg
+#exec --no-startup-id feh --bg-fill $HOME/Pictures/wallpapers/wallpaper.jpg
