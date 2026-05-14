@@ -3,7 +3,6 @@
 #  i3blocks: power menu
 # ----------------------------------------------------------------------------
 #  Left-click the block to open a dmenu with:
-#    * lock      -> i3lock
 #    * logout    -> exit i3 session (back to tty)
 #    * reboot    -> systemctl reboot
 #    * shutdown  -> systemctl poweroff
@@ -13,7 +12,7 @@ icon="POWER"
 
 case "$BLOCK_BUTTON" in
     1)  # left click — open the menu
-        choice=$(printf '%s\n' lock logout reboot shutdown \
+        choice=$(printf '%s\n' logout reboot shutdown \
             | dmenu -i -p "Power:")
         case "$choice" in
             logout)   i3-msg exit ;;
