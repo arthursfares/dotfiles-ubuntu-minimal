@@ -214,3 +214,6 @@ for_window [class="^.*"] border pixel 1
 client.focused          #ffffff #285577 #ffffff #ffffff   #ffffff
 # gaps
 gaps inner 10px
+
+# wallpaper
+#exec --no-startup-id feh --bg-fill $HOME/Pictures/wallpaper/wallpaper.jpg
