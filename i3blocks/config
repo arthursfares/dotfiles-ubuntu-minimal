@@ -11,6 +11,10 @@ separator=true
 separator_block_width=15
 
 
+[bluetooth]
+command=$HOME/.config/i3blocks/bluetooth.sh
+interval=5
+
 [volume]
 command=~/.config/i3blocks/i3blocks-contrib/volume-pipewire/volume-pipewire
 #LABEL=♪ 
@@ -26,7 +30,6 @@ AUDIO_MED_SYMBOL=VOL
 AUDIO_LOW_SYMBOL=VOL
 AUDIO_MUTED_SYMBOL=MUTED
 LONG_FORMAT="${SYMB} ${VOL}%"
-
 
 [time]
 command=date '+%Y-%m-%d %H:%M:%S'
