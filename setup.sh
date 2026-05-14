@@ -208,6 +208,13 @@ install_config "$DOTFILES_DIR/fontconfig/conf.d/01-emoji.conf" \
                "$HOME/.config/fontconfig/conf.d/01-emoji.conf"
 fc-cache -fv
 
+# ---------- 14. NordVPN CLI -------------------------------------------------
+log "Installing NordVPN CLI"
+if ! command -v nordvpn >/dev/null; then
+    sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh)
+fi
+sudo usermod -aG nordvpn "$USER"
+
 # ---------- done ------------------------------------------------------------
 cat <<EOF
 
@@ -225,6 +232,17 @@ cat <<EOF
                            and uncomment the include line for you.
   5. wallpaper           -> uncomment 'wallpaper' line in in i3 config
                            and set the correct image path.
+
+  6. NordVPN login:
+       a. Run: \`nordvpn login\`
+          The CLI will print a URL — open it in your browser
+          and sign in with your Nord Account.
+       b. After signing in you'll land on a page with a
+          "Continue" / "Return to the app" button. Right-click
+          it and "Copy link address".
+       c. Back in the terminal, run (keep the quotes):
+            nordvpn login --callback "pasted-url-here"
+       d. Connect with: \`nordvpn connect\`
 
   Your dotfiles repo lives at:
     $DOTFILES_DIR
