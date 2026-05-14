@@ -38,5 +38,7 @@ LONG_FORMAT="${SYMB} ${VOL}%"
 command=date '+%Y-%m-%d %H:%M:%S'
 interval=1
 
-
+[power]
+command=$HOME/.config/i3blocks/power.sh
+interval=once
 
