@@ -223,6 +223,8 @@ cat <<EOF
                            Black Metal); the kitten will write
                            ~/.config/kitty/current-theme.conf
                            and uncomment the include line for you.
+  5. wallpaper           -> uncomment 'wallpaper' line in in i3 config
+                           and set the correct image path.
 
   Your dotfiles repo lives at:
     $DOTFILES_DIR
