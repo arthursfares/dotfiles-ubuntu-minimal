@@ -54,7 +54,8 @@ sudo apt upgrade -y
 sudo apt install -y \
     xorg i3 i3blocks \
     kitty wget vim git unzip curl \
-    thunar fastfetch feh imagemagick flameshot gparted
+    thunar fastfetch feh imagemagick flameshot gparted \
+    python-is-python3
 
 # ---------- 2. auto-startx on tty1 ------------------------------------------
 log "Configuring .xinitrc and auto-startx on tty1"
@@ -214,6 +215,10 @@ if ! command -v nordvpn >/dev/null; then
     sh <(curl -sSf https://downloads.nordcdn.com/apps/linux/install.sh)
 fi
 sudo usermod -aG nordvpn "$USER"
+
+# ---------- 15. uv ---------------------------------------------------------
+log "Installing uv for python"
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # ---------- done ------------------------------------------------------------
 cat <<EOF
