@@ -54,7 +54,7 @@ sudo apt upgrade -y
 sudo apt install -y \
     xorg i3 i3blocks \
     kitty wget vim git unzip curl \
-    thunar fastfetch feh
+    thunar fastfetch feh imagemagick flameshot
 
 # ---------- 2. auto-startx on tty1 ------------------------------------------
 log "Configuring .xinitrc and auto-startx on tty1"
