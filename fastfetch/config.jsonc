@@ -4,11 +4,11 @@
     "source": "$HOME/Pictures/profile.png",
     "type": "kitty-direct",
     "width": 30,
-    "height": 10
+    "height": 12
   },
   "modules": [
-    //"title",
-    //"separator",
+    "title",
+    "separator",
     "os",
     "host",
     //"kernel",
