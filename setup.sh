@@ -220,6 +220,35 @@ sudo usermod -aG nordvpn "$USER"
 log "Installing uv for python"
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
+# ---------- 16. Docker ------------------------------------------------------
+log "Installing Docker"
+if ! command -v docker >/dev/null; then
+    # Add Docker's official GPG key
+    sudo apt install -y ca-certificates curl
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+    # Add the repository to Apt sources
+    sudo tee /etc/apt/sources.list.d/docker.sources > /dev/null <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+
+    sudo apt update
+    sudo apt install -y \
+        docker-ce docker-ce-cli containerd.io \
+        docker-buildx-plugin docker-compose-plugin
+fi
+
+# Allow running docker without sudo (takes effect after re-login)
+sudo usermod -aG docker "$USER"
+sudo systemctl enable --now docker
+
 # ---------- done ------------------------------------------------------------
 cat <<EOF
 
@@ -227,7 +256,7 @@ cat <<EOF
   All done. A few things still need to be done by hand:
 ------------------------------------------------------------
   1. REBOOT (or at least log out & back in) so:
-       * \`audio\` group membership takes effect
+       * \`audio\`, \`nordvpn\`, and \`docker\` group memberships take effect
        * PipeWire user services start under the new session
   2. \`gh auth login\`            -> authenticate GitHub CLI
   3. \`bluetui\`         -> pair Bluetooth devices
@@ -248,6 +277,9 @@ cat <<EOF
        c. Back in the terminal, run (keep the quotes):
             nordvpn login --callback "pasted-url-here"
        d. Connect with: \`nordvpn connect\`
+
+  7. Verify Docker:
+       \`docker run --rm hello-world\`  (after re-login)
 
   Your dotfiles repo lives at:
     $DOTFILES_DIR
