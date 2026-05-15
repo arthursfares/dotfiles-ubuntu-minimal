@@ -8,7 +8,7 @@
 #    * shutdown  -> systemctl poweroff
 # ============================================================================
 
-icon="POWER"
+icon="（⚆_⚆）"
 
 case "$BLOCK_BUTTON" in
     1)  # left click — open the menu
