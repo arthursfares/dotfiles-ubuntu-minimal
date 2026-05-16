@@ -1,20 +1,4 @@
-## DOOM Emacs
-
-``` shell
-sudo apt install emacs ripgrep fd-find shellcheck markdown fonts-symbola
-
-git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
-~/.emacs.d/bin/doom install
-
-# add this line to .bashrc and restart terminal
-export PATH="$HOME/.emacs.d/bin:$PATH"
-
-doom doctor
-# inside Emacs, run M-x nerd-icons-install-fonts
-# the M stands for the ALT key
-```
-
-## Disk partition
+### Disk partition
 
 **Issue: Root filesystem only uses 100 GiB on a 1 TB disk after Ubuntu LVM install**
 
