@@ -55,7 +55,10 @@ sudo apt install -y \
     xorg i3 i3blocks \
     kitty wget vim git unzip curl \
     thunar fastfetch feh imagemagick flameshot gparted \
-    python-is-python3
+    python-is-python3 neovim
+# install configs for fastfetch and neovim
+cp -r "$DOTFILES_DIR"/fastfetch "$HOME"/.config
+cp -r "$DOTFILES_DIR"/nvim      "$HOME"/.config
 
 # ---------- 2. auto-startx on tty1 ------------------------------------------
 log "Configuring .xinitrc and auto-startx on tty1"
