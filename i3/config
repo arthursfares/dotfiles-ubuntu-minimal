@@ -219,4 +219,10 @@ client.focused          #ffffff #285577 #ffffff #ffffff   #ffffff
 gaps inner 10px
 
 # wallpaper
-exec --no-startup-id feh --bg-fill $HOME/Pictures/wallpapers/1.webp
+exec --no-startup-id feh --bg-fill $HOME/Pictures/wallpapers/1.jpg
+
+# natural scroll in touchpad
+# xinput list -> to get a list of devices (find the touchpad one)
+# xinput list-props "YOUR_TOUCHPAD_NAME" -> to find the Natural Input parameter name
+# exec --no-startup-id xinput set-prop "ELAN0521:01 04F3:31B1 Touchpad" "libinput Natural Scrolling Enabled" 1
+
