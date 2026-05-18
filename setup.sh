@@ -252,6 +252,16 @@ fi
 sudo usermod -aG docker "$USER"
 sudo systemctl enable --now docker
 
+# ---------- 17. add modifications to bashrc ---------------------------------
+log "Updating .bashrc"
+{
+    echo ""
+    echo "# run fastfetch as soon as a new interactive terminal session is open"
+    echo "[[ $- == *i* ]] && fastfetch"
+} >> "$HOME/.bashrc"
+log "Added fastfetch snippet to .bashrc"
+    
+
 # ---------- done ------------------------------------------------------------
 cat <<EOF
 
