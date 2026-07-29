@@ -226,3 +226,5 @@ exec --no-startup-id feh --bg-fill $HOME/Pictures/wallpapers/1.jpg
 # xinput list-props "YOUR_TOUCHPAD_NAME" -> to find the Natural Input parameter name
 # exec --no-startup-id xinput set-prop "ELAN0521:01 04F3:31B1 Touchpad" "libinput Natural Scrolling Enabled" 1
 
+# keyboard layoout switch config
+exec_always --no-startup-id setxkbmap -model abnt2 -layout br,us -variant abnt2, -option grp:alt_shift_toggle
